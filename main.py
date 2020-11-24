@@ -8,7 +8,7 @@ import math
 import matplotlib.pyplot as plt
 
 
-def initiate(population_size=200, length=30, max_city_pos=100, seed=None):#or here
+def initiate(population_size=200, length=10, max_city_pos=100, seed=None):#or here
     if seed is not None:
         random.seed(seed)
     
@@ -94,7 +94,7 @@ def create_graph():
 
     return(fig, ax1, ax2)
 
-def update_graph(fig, ax1, ax2, average, minimum, cities_x, cities_y, route):
+def show_graph(fig, ax1, ax2, average, minimum, cities_x, cities_y, route):
     
     ax1.plot(average, "r-")
     ax1.plot(minimum, "y-") 
@@ -111,31 +111,13 @@ def update_graph(fig, ax1, ax2, average, minimum, cities_x, cities_y, route):
     plt.pause(0.001)
 
 
-
-def draw_lines(cities_x,cities_y,route):
-    plt.figure(1)
-    for i, current in enumerate(route):
-        if i < len(route)-1:
-            plt.plot([cities_x[current],cities_x[route[i+1]]], [cities_y[current],cities_y[route[i+1]]],"ro-")
-    plt.title("Cities and Path")
-
-
-def draw_fitness_graph(average,minimum):
-    plt.figure(2)
-    plt.plot(average)
-    plt.plot(minimum)
-    plt.title("Fitness")
-    plt.legend(["Average Fitness","Minimum Fitness"])
-
-
-def ga(steps=500, animate=True):
+def ga(steps=100, animate=True):
 
     population, cities_x, cities_y = initiate()#you can change initial parameters here
     fitnesses = calculate_fitness(cities_x,cities_y, population)
     print("Initialized")
 
-    if animate:
-        fig, ax1, ax2 = create_graph()
+    fig, ax1, ax2 = create_graph()
 
     i=0
     min_fitnesses = []
@@ -151,14 +133,13 @@ def ga(steps=500, animate=True):
         avg_fitnesses.append(sum(fitnesses) / len(fitnesses))
         i+=1
         if animate:
-            update_graph(fig, ax1, ax2, avg_fitnesses, min_fitnesses, cities_x, cities_y, population[fitnesses.index(min(fitnesses))])
+            show_graph(fig, ax1, ax2, avg_fitnesses, min_fitnesses, cities_x, cities_y, population[fitnesses.index(min(fitnesses))])
 
     print(f"Minimum Fitness after {steps} steps:", min(fitnesses))
 
     plt.ioff()
     if not animate:
-        draw_fitness_graph(avg_fitnesses, min_fitnesses)
-        draw_lines(cities_x, cities_y, population[fitnesses.index(min(fitnesses))])
+        show_graph(fig, ax1, ax2, avg_fitnesses, min_fitnesses, cities_x, cities_y, population[fitnesses.index(min(fitnesses))])
     plt.show()
 
 ga(animate=True)#you can add parameters here to change graph behaviour 
